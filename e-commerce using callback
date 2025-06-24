@@ -1,0 +1,49 @@
+const products = [
+  { id: 1, name: "Laptop", price: 700 },
+  { id: 2, name: "Phone", price: 300 },
+  { id: 3, name: "Headphones", price: 100 }
+];
+
+let cart = [];
+
+function addToCart(productId, callback) {
+  const product = products.find(p => p.id === productId);
+  if (product) {
+    cart.push(product);
+    console.log(`${product.name} added to cart.`);
+    callback(null, product);
+  } else {
+    callback("Product not found.", null); 
+  }
+}
+
+function checkout(cart, callback) {
+  if (cart.length === 0) {
+    callback("Cart is empty. Cannot checkout.", null);
+  } else {
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    console.log("Checkout successful.");
+    callback(null, total);
+  }
+}
+
+
+addToCart(1, (err, product) => {
+  if (err) {
+    console.log(err);
+  } else {
+    addToCart(2, (err, product) => {
+      if (err) {
+        console.log(err);
+      } else {
+        checkout(cart, (err, total) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(`Total amount to pay: $${total}`);
+          }
+        });
+      }
+    });
+  }
+});
